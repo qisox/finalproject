@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias type="com.kh.dungjip.notice.model.vo.Notice" alias="notice" /> 
+		
+		<typeAlias type="com.kh.dungjip.member.model.vo.Member" alias="member"/>
+
+		<typeAlias type="com.kh.dungjip.house.model.vo.House" alias="house" /> 
+    
+		<typeAlias type="com.kh.dungjip.common.websocket.model.vo.ChatMessage" alias="chatMessage" /> 
+		
+		<typeAlias type="com.kh.dungjip.house.model.vo.Jjim" alias="jjim" />
+		  
+		<typeAlias type="com.kh.dungjip.estate.model.vo.Estate" alias="estate"/>
+
+		<typeAlias type="com.kh.dungjip.common.websocket.model.vo.ChatRoom" alias="chatRoom" /> 
+		
+		<typeAlias type="com.kh.dungjip.common.websocket.model.vo.JoinChat" alias="joinChat" /> 
+		
+		<typeAlias type="com.kh.dungjip.house.model.vo.HouseImg" alias="houseImg" /> 
+		
+		<typeAlias type="com.kh.dungjip.enquiry.model.vo.Enquiry" alias="enquiry" /> 
+		
+		<typeAlias type="com.kh.dungjip.residentReview.model.vo.ResidentReview" alias="residentReview" /> 
+
+		<typeAlias type="com.kh.dungjip.estate.model.vo.EstateReview" alias="estateReview"/>
+	
+		<typeAlias type="com.kh.dungjip.estate.model.vo.Own" alias="own"/>
+		
+		<typeAlias type="com.kh.dungjip.house.model.vo.Time" alias="time" /> 
+		
+
+		
+		<typeAlias type="com.kh.dungjip.estate.model.vo.EsReLike" alias="esReLike"/>
+		
+		<typeAlias type="com.kh.dungjip.residentReview.model.vo.ReviewImg" alias="reviewImg" /> 
+		
+		<typeAlias type="com.kh.dungjip.residentReview.model.vo.Keyword" alias="keyword" />
+		
+		<typeAlias type="com.kh.dungjip.residentReview.model.vo.MemberKeyword" alias="memberKeyword" />
+
+		<typeAlias type="com.kh.dungjip.house.model.vo.Reservation" alias="reservation" /> 
+		
+		<typeAlias type="com.kh.dungjip.common.report.model.vo.ReportEstate" alias="reportEstate"/>
+		
+		<!-- 예약하기 new -->
+		<typeAlias type="com.kh.dungjip.house.model.vo.ReservationNew" alias="reservationNew" />
+		
+
+	</typeAliases>
+		
+</configuration>

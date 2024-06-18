@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="memberMapper">
+    
+  	<resultMap type="member" id="memberResultSet">
+  			<result column="USER_NO" property="userNo" />
+  			<result column="USER_TYPE" property="userType"/>
+  			<result column="USER_ID" property="userId"/>
+    		<result column="USER_PWD" property="userPwd"/>
+    		<result column="USER_NAME" property="userName"/>
+    		<result column="USER_NICKNAME" property="userNickName"/>
+    		<result column="AGE" property="age"/>
+    		<result column="GENDER" property="gender"/>
+    		<result column="EMAIL" property="email"/>
+    		<result column="PHONE" property="phone"/>
+    		<result column="ADDRESS" property="address"/>
+    		<result column="PREFER_LOCATION" property="preferLocation"/>
+    		<result column="PREFER_CHECK1" property="preferCheck1"/> 		
+    		<result column="PREFER_CHECK2" property="preferCheck2"/>
+    		<result column="PREFER_CHECK3" property="preferCheck3"/> 
+    		<result column="STATUS" property="status"/>
+    		<result column="ORIGIN_NAME" property="originName"/> 
+    		<result column="CHANGE_NAME" property="changeName"/>   
+    		<result column="LASTLOGINTIME" property="lastLoginTime"/> 
+    		<result column="LASTLOGOUTTIME" property="lastLogoutTime"/>   		
+  		</resultMap>
+  		
+  		<resultMap type="estate" id="estateResultSet">  		
+    		<result column="ES_NO" property="esNo"/>   		
+  			<result column="USER_NO" property="userNo" />
+  			<result column="ES_NAME" property="esName"/>
+  			<result column="ES_CEO" property="esCeo"/>
+    		<result column="ES_PHONE" property="esPhone"/>
+    		<result column="ES_NUM" property="esNum"/>
+    		<result column="ES_REGISTER_NUM" property="esRegisterNum"/>
+    		<result column="ES_ADDRESS" property="esAddress"/>
+    		<result column="ES_CONTENT" property="esContent"/>
+    		<result column="ES_IMAGE" property="esImage"/>
+    		<result column="ES_INTRO" property="esIntro"/>
+    		<result column="ES_COUNT" property="esCount"/>
+    		<result column="ES_STATUS" property="esStatus"/>
+		
+  		</resultMap>
+  		
+  		<update id="lastLogoutTime">
+  		UPDATE MEMBER 
+		SET LASTLOGOUTTIME= SYSTIMESTAMP
+		WHERE USER_NO = #{userNo}
+  		</update>
+  		
+		<update id="updateLastLoginTime">
+		UPDATE MEMBER 
+		SET LASTLOGINTIME= SYSTIMESTAMP
+		WHERE USER_NO = #{userNo}
+		</update>  		  		
+  		
+  		<select id="loginMember" parameterType="member" resultMap="memberResultSet">
+  			SELECT *
+			FROM MEMBER
+			WHERE USER_ID = #{userId}
+ 			AND STATUS = 'Y'
+  		</select>
+
+    	<select id="ajaxIdMethod" resultType="_int">
+    		SELECT COUNT(USER_ID) 
+    		FROM MEMBER 
+    		WHERE USER_ID = #{userId}    	
+    	</select>	 		
+  		
+  		<insert id="insertMember" parameterType="member">
+  			INSERT INTO MEMBER (USER_NO
+  								,USER_TYPE                    
+			                    ,USER_ID
+			                    ,USER_PWD
+			                    ,USER_NAME
+			                    ,USER_NICKNAME
+			                    ,EMAIL
+			                    ,PHONE
+			                    ,AGE
+			                    ,GENDER
+			                    ,ADDRESS
+			                    ,PREFER_LOCATION
+			                    ,PREFER_CHECK1
+			                    ,PREFER_CHECK2
+			                    ,ORIGIN_NAME
+			                    ,CHANGE_NAME)
+			VALUES(SEQ_MNO.NEXTVAL
+					,#{userType}
+					,#{userId}
+					,#{userPwd}
+					,#{userName}
+					,#{userNickName}
+					,#{email}
+					,#{phone}
+					,#{age}
+					,#{gender}
+					,#{address}
+					,#{preferLocation}
+					,#{preferCheck1}
+					,#{preferCheck2}
+					,#{originName}
+					,#{changeName}) 
+  		</insert>
+  		
+  		<select id="selectMemberList" parameterType="member" resultMap="memberResultSet">
+  			SELECT *
+			FROM MEMBER 		
+			ORDER BY USER_NO
+  		</select>
+  		
+  		<select id="getNoticeByNo" resultType="member" resultMap="memberResultSet">
+  			SELECT *
+  			FROM MEMBER
+  			WHERE USER_NO = #{userNo}
+  		</select>
+  		
+  		<update id="banMember" parameterType="member">
+  			UPDATE MEMBER
+  			SET STATUS = 'N'
+  			WHERE USER_NO = #{userNo}
+  			AND STATUS = 'Y'
+  		</update>
+  		
+  		<update id="permitMember" parameterType="member">
+  			UPDATE MEMBER
+  			SET STATUS = 'Y'
+  			WHERE USER_NO = #{userNo}
+  			AND STATUS = 'N'
+  		</update>
+  		
+  		<insert id="esInsertMember" parameterType="member">
+  			INSERT INTO MEMBER (USER_NO
+  								,USER_TYPE                    
+			                    ,USER_ID
+			                    ,USER_PWD
+			                    ,USER_NAME
+			                    ,USER_NICKNAME
+			                    ,EMAIL
+			                    ,PHONE
+			                    ,AGE
+			                    ,GENDER
+			                    ,ADDRESS
+			                    ,ORIGIN_NAME
+			                    ,CHANGE_NAME)
+			VALUES(SEQ_MNO.NEXTVAL
+					,#{userType}
+					,#{userId}
+					,#{userPwd}
+					,#{userName}
+					,#{userNickName}
+					,#{email}
+					,#{phone}
+					,#{age}
+					,#{gender}
+					,#{address}
+					,#{originName}
+					,#{changeName}) 		  		
+  		</insert>
+  		
+  		<select id="esajaxIdMethod" resultType="_int">
+    		SELECT COUNT(USER_ID) 
+    		FROM MEMBER 
+    		WHERE USER_ID = #{userId}    	
+    	</select>
+    	
+    	<select id="exajaxphoneMethod" resultType="_int">
+    		SELECT COUNT (PHONE)
+			FROM MEMBER
+			WHERE PHONE = #{phone}
+    	</select>
+    	
+    	<select id="ajaxphoneMethod" resultType="_int">
+    		SELECT COUNT (PHONE)
+			FROM MEMBER
+			WHERE PHONE = #{phone}
+    	</select>
+    	
+	  	<select id="ajaxnickname" resultType="_int">
+			SELECT COUNT(USER_NICKNAME)
+			FROM MEMBER
+			WHERE USER_NICKNAME = #{userNickName}	
+  		</select>
+    	
+    	<insert id="insertEsMember" parameterType="estate">
+    		INSERT INTO ESTATE (ES_NO
+    							,USER_NO
+    							,ES_NAME
+								,ES_CEO
+								,ES_PHONE
+								,ES_NUM
+								,ES_REGISTER_NUM
+								,ES_ADDRESS
+								,ES_CONTENT
+								,ES_INTRO)
+			VALUES(SEQ_ENO.NEXTVAL
+					,#{userNo}
+					,#{esName}
+					,#{esCeo}
+					,#{esPhone}
+					,#{esNum}
+					,#{esRegisterNum}
+					,#{esAddress}
+					,#{esContent}
+					,#{esIntro}) 		  	    	
+    	</insert>	
+    	
+    	<select id="userNum" resultType="_int">
+    		SELECT USER_NO
+    		FROM MEMBER
+    		WHERE USER_ID = #{userId}   	
+    	</select>
+    	
+    	<select id="memberFindId" parameterType="member" resultMap="memberResultSet">
+    		SELECT *
+			FROM MEMBER 
+			WHERE USER_NAME = #{userName}
+			AND PHONE = #{phone}
+    	</select>
+    	
+    	<select id="memberFindPwd" resultType="_int">
+    		SELECT COUNT(*)
+			FROM MEMBER 
+			WHERE USER_NAME = #{userName}
+			AND EMAIL = #{email}
+			AND USER_ID = #{userId}
+    	</select>
+    	
+    	<update id="updateMemberPwd">
+    		UPDATE MEMBER
+    		SET USER_PWD = #{userPwd}
+    		WHERE USER_NAME = #{userName}
+			AND EMAIL = #{email}
+			AND USER_ID = #{userId}	    	
+    	</update>
+    	
+    	<delete id="memberDelete" parameterType="string">
+    		UPDATE MEMBER 
+ 			SET	STATUS = 'N'
+    		WHERE USER_ID = #{userId}
+    		AND STATUS = 'Y'   	
+    	</delete>
+    	
+    	<update id="memberPwdUpdate" parameterType="java.util.Map">
+		    UPDATE MEMBER
+		    SET USER_PWD = #{userPwd}
+		    WHERE USER_NO = #{userNo}
+		</update>
+		
+		<update id="mypageUpdate" >
+			UPDATE MEMBER
+			SET USER_NAME = #{userName}
+				,USER_NICKNAME = #{userNickName}
+				,AGE = #{age}
+				,PHONE = #{phone}
+				,EMAIL = #{email}
+				,ADDRESS = #{address}
+			WHERE USER_NO = #{userNo}	
+		
+		</update>
+    	<update id="userSubscribe">
+    		UPDATE MEMBER
+    		SET SUBSCRIBE = 'Y'
+    		WHERE USER_NO = #{userNo}
+    	</update>
+    	
+    	<select id="findSubscribeUser" resultMap="memberResultSet">
+  			SELECT *
+			FROM MEMBER
+			WHERE USER_NO = #{userNo}
+ 			AND STATUS = 'Y'
+  		</select>
+  		
+  		<update id="noSubscribe">
+    		UPDATE MEMBER
+    		SET SUBSCRIBE = 'N'
+    		WHERE USER_NO = #{userNo}
+    	</update>
+
+    	<!-- 예약용 resultMap 생성 -->
+    	<resultMap type="reservation" id="reservationResultSet">
+    		<result column="ES_NO" property="esNo"/>
+			<result column="USER_NO" property="userNo"/>
+			<result column="RESERVATION_NO" property="reservationNo"/>
+			<result column="RESERVATION_DATE" property="reservationDate"/>
+			<result column="TIME_NO" property="timeNo"/>		
+			<association property="estate" javaType="estate">
+				<result column="ES_NAME" property="esName"/>
+			</association>
+			<association property="time" javaType="time">
+				<result column="TIME_VALUE" property="timeValue"/>
+			</association>
+			<association property="member" javaType="member">
+				<result column="USER_NAME" property="userName"/>
+			</association>
+    	</resultMap>
+    	
+    	<select id="selectReservation" resultMap="reservationResultSet">
+    	SELECT E.ES_NO
+    	      ,E.ES_NAME
+      	      ,R.USER_NO
+      	      ,R.RESERVATION_NO
+              ,R.RESERVATION_DATE
+              ,T.TIME_VALUE
+		FROM RESERVATION R
+		JOIN ESTATE E ON R.ES_NO = E.ES_NO
+		JOIN TIME T ON R.TIME_NO = T.TIME_NO
+		WHERE R.USER_NO=#{userNo}
+		ORDER BY R.RESERVATION_NO DESC
+    	</select>
+
+    	<update id="fileAjaxMethod" >
+    		UPDATE MEMBER
+    		SET ORIGIN_NAME = #{originName}
+    			,CHANGE_NAME = #{changeName}
+    		WHERE USER_NO = #{userNo}	
+    	</update>
+
+		<update id="mypageEstateUpdate">
+			UPDATE ESTATE
+			SET  ES_NAME = #{esName}
+				,ES_CEO = #{esCeo}
+				,ES_PHONE = #{esPhone}
+				,ES_ADDRESS = #{esAddress}
+				,ES_CONTENT = #{esContent}
+				,ES_INTRO = #{esIntro}
+			WHERE ES_NO = #{esNo}	
+		</update>
+    	
+    	<select id="membermypageEsReservation" resultMap="reservationResultSet">
+    		SELECT RESERVATION_NO
+					,R.ES_NO
+					,R.USER_NO
+					,RESERVATION_DATE
+					,R.TIME_NO
+					,T.TIME_VALUE
+					,M.USER_NAME 
+			FROM RESERVATION R
+			JOIN ESTATE E ON R.ES_NO = E.ES_NO
+			JOIN TIME T ON R.TIME_NO = T.TIME_NO
+			JOIN MEMBER M ON M.USER_NO = R.USER_NO
+			WHERE R.ES_NO = #{esNo}
+			ORDER BY R.RESERVATION_NO DESC
+    	</select>
+    	
+    </mapper>

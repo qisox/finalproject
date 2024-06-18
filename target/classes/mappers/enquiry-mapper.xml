@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+ <mapper namespace="enquiryMapper">
+ 	<resultMap type="enquiry" id="enquiryResultSet">
+ 		<result column="ENQUIRY_NO" property="enquiryNo"/>
+ 		<result column="USER_NO" property="userNo"/>
+ 		<result column="ENQUIRY_ENROLL_DATE" property="enquiryEnrollDate"/>
+ 		<result column="ENQUIRY_TITLE" property="enquiryTitle"/>
+ 		<result column="ENQUIRY_CONTENT" property="enquiryContent"/>
+ 		<result column="ENQUIRY_IMAGE" property="enquiryImage"/>
+ 		<result column="ENQUIRY_DATE" property="enquiryDate"/>
+ 		<result column="ENQUIRY_REPLY" property="enquiryReply"/>
+ 		<result column="STATUS" property="status"/>
+ 		<result column="CHANGE_NAME" property="changeName"/>
+ 		
+ 		<result column="USER_NAME" property="userName"/>
+ 	</resultMap>
+ 
+ 	<!-- 1:1문의 등록 -->
+ 	<insert id="insertEnquiry">
+ 		INSERT INTO ENQUIRY(ENQUIRY_NO
+		                   ,USER_NO
+		                   ,ENQUIRY_TITLE
+		                   ,ENQUIRY_CONTENT
+		                   ,ENQUIRY_IMAGE
+		                   ,CHANGE_NAME
+		                   ,ENQUIRY_DATE)
+					 VALUES(SEQ_ENQNO.NEXTVAL
+					       ,#{userNo}
+					       ,#{enquiryTitle}
+					       ,#{enquiryContent}
+					       ,#{enquiryImage}
+					       ,#{changeName}
+					       ,'')
+ 	</insert>
+	
+	<!-- 관리자 댓글 -->
+	<insert id="insertReply">
+		UPDATE ENQUIRY
+		SET ENQUIRY_REPLY = #{enquiryReply}
+		   ,STATUS = 'Y'
+		   ,ENQUIRY_DATE = SYSDATE
+		WHERE ENQUIRY_NO = #{enquiryNo}
+	</insert>
+	
+	<select id="moreEnquiry" resultMap="enquiryResultSet">
+        SELECT *
+        FROM(SELECT ROWNUM RNUM , A.*
+        FROM(SELECT E.USER_NO
+	               ,M.USER_NAME
+	               ,ENQUIRY_NO
+	               ,ENQUIRY_ENROLL_DATE
+	               ,ENQUIRY_TITLE
+	               ,ENQUIRY_CONTENT
+	               ,ENQUIRY_IMAGE
+	               ,E.CHANGE_NAME
+	               ,ENQUIRY_DATE
+	               ,ENQUIRY_REPLY
+	               ,E.STATUS
+        FROM ENQUIRY E
+        	,MEMBER M
+    	WHERE E.USER_NO = M.USER_NO
+		ORDER BY E.STATUS, ENQUIRY_ENROLL_DATE) A)
+        WHERE RNUM BETWEEN #{startIndex} AND #{enquiryList}		
+	
+	</select>
+	
+	<!-- 조회 -->
+	<select id="selectEnquiryList" resultMap="enquiryResultSet">
+		SELECT E.USER_NO
+		       ,M.USER_NAME
+		       ,ENQUIRY_NO
+		       ,ENQUIRY_ENROLL_DATE
+		       ,ENQUIRY_TITLE
+		       ,ENQUIRY_CONTENT
+		       ,ENQUIRY_IMAGE
+		       ,E.CHANGE_NAME
+		       ,ENQUIRY_DATE
+		       ,ENQUIRY_REPLY
+		       ,E.STATUS
+		FROM ENQUIRY E
+		    ,MEMBER M
+		WHERE E.USER_NO = M.USER_NO
+		AND E.USER_NO = #{userNo}
+		ORDER BY E.STATUS, ENQUIRY_ENROLL_DATE
+	</select>
+	
+	<!-- 삭제 -->
+	<delete id="myQnAdelete">
+		DELETE 
+		FROM ENQUIRY
+		WHERE ENQUIRY_NO = #{enquiryNo}	
+	</delete>
+
+	<!-- 조회 -->
+	<select id="selectqList" resultMap="enquiryResultSet">
+		SELECT E.USER_NO
+		       ,M.USER_NAME
+		       ,ENQUIRY_NO
+		       ,ENQUIRY_ENROLL_DATE
+		       ,ENQUIRY_TITLE
+		       ,ENQUIRY_CONTENT
+		       ,ENQUIRY_IMAGE
+		       ,E.CHANGE_NAME
+		       ,ENQUIRY_DATE
+		       ,ENQUIRY_REPLY
+		       ,E.STATUS
+		FROM ENQUIRY E
+		    ,MEMBER M
+		WHERE E.USER_NO = M.USER_NO
+		AND E.USER_NO = #{userNo}
+		ORDER BY E.STATUS, ENQUIRY_ENROLL_DATE
+	</select>
+	
+	
+ </mapper>
+ 

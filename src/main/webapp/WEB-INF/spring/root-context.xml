@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<bean class="org.apache.commons.dbcp.BasicDataSource"
+		id="dataSource">
+		<!-- 어느 db에 접속할 것인지 작성 -->
+		<property name="driverClassName"
+			value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url"
+			value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="username" value="DUNGJIP" />
+		<property name="password" value="DUNGJIP" />
+	</bean>
+
+	<!-- 2. mybatis spring에서 제공하는 sql 명령어 실행을 위한 도구 등록 -->
+
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- mybatis 설정 넣기 -->
+		<property name="configLocation"
+			value="classpath:mybatis-config.xml" />
+
+		<property name="mapperLocations"
+			value="classpath:mappers/*-mapper.xml" />
+
+		<!-- db생성 정보 넣기 -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 3. sql구문 실행시킬 템플릿 제공 도구 등록 -->
+
+	<bean class="org.mybatis.spring.SqlSessionTemplate"
+		id="sqlSession">
+		<constructor-arg ref="sqlSessionFactory" />
+	</bean>
+	
+	<!-- fileupload 관련 빈 등록 -->
+	<!-- 기본 multipart resolver type -->
+	<!-- <bean class="org.springframework.web.multipart.MultipartResolver"> -->
+	
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+		 <!-- upload되는 파일에 대한 인코딩 처리 -->
+		 <property name="defaultEncoding" value="UTF-8"/>
+		 <property name="maxUploadSize" value="10000000"/> <!-- 파일 용량 제한  -->
+		 <property name="maxInMemorySize" value="10000000"/> <!-- 메모리 보관 최대크키(임시저장) -->
+	</bean>
+	
+	<!-- 트랜잭션 사용 설정
+		@Transactinal 어노테이션 부여
+		해당 어노테이션 읽으려면 설정 필요
+	 -->
+	 <tx:annotation-driven/>
+	 
+	 <!-- 트랜잭션 매니저 도구 등록 -->
+	 <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	 	<property name="dataSource" ref="dataSource"/>
+	 </bean>
+	 
+	 <!-- aop 관련 설정
+	 	@Aspect와 관련된 어노테이션 활성화
+	  -->
+	<aop:aspectj-autoproxy/>
+	
+	<!-- 
+		component-scan 등록하기
+		@Service, @Repository, @Aspect 를 스캔하는 설정 추가해주기
+	 -->
+	<context:component-scan base-package="com.kh.dungjip" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+		<context:include-filter type="annotation" expression="org.aspectj.lang.annotation.Aspect" />
+	</context:component-scan>
+	 
+	 <!-- 스케줄러 설정
+	 	namespace에서 task 체크 -->
+	<task:annotation-driven/>
+</beans>
